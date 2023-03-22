@@ -12,6 +12,8 @@ import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
 
 import { AppModule } from './app.module';
 
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
@@ -32,6 +34,12 @@ async function bootstrap() {
     new AllExceptionsFilter(),
     new HttpExceptionFilter(),
   );
+
+  // 热更新
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 
   await app.listen(3000);
 }

@@ -63,6 +63,7 @@ export class UserController {
 
   @Get('getTestName')
   getTestName() {
+    console.log('getTestName');
     return this.configService.get('TEST_VALUE').name;
   }
 }
