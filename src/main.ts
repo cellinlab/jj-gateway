@@ -6,6 +6,9 @@ import {
 } from '@nestjs/platform-fastify';
 
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
+import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
+
 
 import { AppModule } from './app.module';
 
@@ -23,6 +26,12 @@ async function bootstrap() {
 
   // 全局拦截器 - 统一返回格式
   app.useGlobalInterceptors(new TransformInterceptor());
+
+  // 全局异常过滤器
+  app.useGlobalFilters(
+    new AllExceptionsFilter(),
+    new HttpExceptionFilter(),
+  );
 
   await app.listen(3000);
 }

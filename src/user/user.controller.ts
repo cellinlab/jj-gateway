@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+import { BizException } from 'src/common/exceptions/biz.exception.filter';
+
 @Controller({
   path: 'user',
   version: '1',
@@ -40,5 +42,17 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Get('findError')
+  @Version([VERSION_NEUTRAL, '1'])
+  findError() {
+    throw new Error('findError');
+  }
+
+  @Get('findBizError')
+  @Version([VERSION_NEUTRAL, '1'])
+  findBizError() {
+    throw new BizException('findBizError');
   }
 }
