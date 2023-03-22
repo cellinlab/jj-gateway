@@ -1,4 +1,4 @@
-import { VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
+import { VersioningType, VERSION_NEUTRAL, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -33,6 +33,11 @@ async function bootstrap() {
   app.useGlobalFilters(
     new AllExceptionsFilter(),
     new HttpExceptionFilter(),
+  );
+
+  // 全局管道 - 参数校验
+  app.useGlobalPipes(
+    new ValidationPipe()
   );
 
   // 生成接口文档
