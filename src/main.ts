@@ -5,6 +5,8 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
+
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -18,6 +20,9 @@ async function bootstrap() {
     defaultVersion: [VERSION_NEUTRAL, '1', '2'],
     type: VersioningType.URI,
   });
+
+  // 全局拦截器 - 统一返回格式
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   await app.listen(3000);
 }
