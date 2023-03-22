@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Version, VERSION_NEUTRAL } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
-@Controller('user')
+@Controller({
+  path: 'user',
+  version: '1',
+})
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -13,8 +16,15 @@ export class UserController {
   }
 
   @Get()
+  @Version([VERSION_NEUTRAL, '1'])
   findAll() {
-    return this.userService.findAll();
+    return `findAll version 1 and neutral(default)`
+  }
+
+  @Get()
+  @Version(['2'])
+  findAll_v2() {
+    return `findAll_v2`;
   }
 
   @Get(':id')
