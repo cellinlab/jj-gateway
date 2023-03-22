@@ -8,7 +8,7 @@ import {
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
 import { HttpExceptionFilter } from './common/exceptions/http.exception.filter';
-
+import { generateDocument } from './doc';
 
 import { AppModule } from './app.module';
 
@@ -34,6 +34,9 @@ async function bootstrap() {
     new AllExceptionsFilter(),
     new HttpExceptionFilter(),
   );
+
+  // 生成接口文档
+  generateDocument(app);
 
   // 热更新
   if (module.hot) {
