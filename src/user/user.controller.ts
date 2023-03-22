@@ -1,4 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Version, VERSION_NEUTRAL } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -10,7 +12,10 @@ import { BizException } from 'src/common/exceptions/biz.exception.filter';
   version: '1',
 })
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+  ) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -54,5 +59,10 @@ export class UserController {
   @Version([VERSION_NEUTRAL, '1'])
   findBizError() {
     throw new BizException('findBizError');
+  }
+
+  @Get('getTestName')
+  getTestName() {
+    return this.configService.get('TEST_VALUE').name;
   }
 }
