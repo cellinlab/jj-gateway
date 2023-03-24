@@ -1,0 +1,58 @@
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+
+import { FeishuUserInfo } from '@/user/feishu/feishu.dto';
+import { FeishuService } from '@/user/feishu/feishu.service';
+
+import { User } from '@/user/user.mongo.entity';
+import { UserService } from '@/user/user.service';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private jwtService: JwtService,
+    private userService: UserService,
+    private feishuService: FeishuService,
+  ) { }
+
+  async validateFeishuUser(code: string): Promise<Payload> {
+    const feishuUserInfo: FeishuUserInfo = await this.getFeishuTokenByApplications(code);
+
+    const user: User = await this.userService.createOrUpdateByFeishu(feishuUserInfo);
+
+    return {
+      userId: user.id,
+      username: user.username,
+      name: user.name,
+      email: user.email,
+      feishuAccessToken: feishuUserInfo.accessToken,
+      feishuUserId: feishuUserInfo.feishuUserId,
+    };
+  }
+
+  async login(user: Payload) {
+    return {
+      access_token: this.jwtService.sign(user),
+    };
+  }
+
+  async getFeishuTokenByApplications(code: string) {
+    const data = await this.feishuService.getUserToken(code);
+
+    const userInfo: FeishuUserInfo = {
+      accessToken: data.access_token,
+      avatarBig: data.avatar_big,
+      avatarMiddle: data.avatar_middle,
+      avatarThumb: data.avatar_thumb,
+      avatarUrl: data.avatar_url,
+      email: data.email,
+      enName: data.en_name,
+      mobile: data.mobile,
+      name: data.name,
+      feishuUnionId: data.union_id,
+      feishuUserId: data.user_id,
+    };
+
+    return userInfo;
+  }
+}

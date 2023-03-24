@@ -23,7 +23,8 @@ import { FeishuController } from './feishu/feishu.controller';
     FeishuService
   ],
   exports: [
-    UserService
+    UserService,
+    FeishuService,
   ]
 })
 export class UserModule { }

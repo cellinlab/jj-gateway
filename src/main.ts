@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import fastify from 'fastify';
+import fastifyCookie from '@fastify/cookie';
 
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './common/exceptions/base.exception.filter';
@@ -25,6 +26,11 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(fastifyInstance),
   );
+
+  // 配置 cookie
+  app.register(fastifyCookie, {
+    secret: 'my-secret',
+  });
 
   // 接口版本化管理
   app.enableVersioning({
